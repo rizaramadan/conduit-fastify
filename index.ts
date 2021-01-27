@@ -1,9 +1,23 @@
 import fastify from 'fastify'
-import {IQuerystring, IHeaders, IRegisterWrapper, IUserResponse} from "./contracts"
+import { IQuerystring, IHeaders } from "./contracts"
+import { IRegisterWrapper , IUserResponse } from "./handlers/register"
+
+
 
 const server = fastify()
 
-server.get('/ping', async (request, reply) => {
+server.register(require('fastify-postgres'), {
+  connectionString: 'postgres://postgres:mainmain@localhost:5432/gonduit',
+});
+
+server.get('/calc', async () => {
+  const client = await server.pg.connect()
+  const { rows } = await client.query<Int16Array>('SELECT 2 + 2 as sum');
+  client.release()
+  return rows[0]
+});
+
+server.get('/ping', async (request, reply) => { 
   return 'pong\n'
 })
 
@@ -32,7 +46,9 @@ server.post<{
             bio: "this is bio",
         }
     }
-    return output
+    reply
+      .code(200)
+      .send(output)
   })
 
 server.listen(8080, (err, address) => {
