@@ -1,8 +1,13 @@
-export interface IQuerystring {
-    username: string;
-    password: string;
+
+export interface IUser {
+  username: string;
+  password: string;
+  email:    string;
+  token:    string | null;
+  bio:      string | null;
+  image:    string | null;
 }
-  
-export interface IHeaders {
-    'H-Custom': string;
+
+export interface IUserWrapper {
+  user: IUser;
 }

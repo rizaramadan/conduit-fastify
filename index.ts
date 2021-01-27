@@ -1,10 +1,7 @@
-import fastify from 'fastify'
-import { IQuerystring, IHeaders } from "./contracts"
-import { IRegisterWrapper , IUserResponse } from "./handlers/register"
+import fastify, { FastifyInstance } from 'fastify'
+import { Register } from "./web/register"
 
-
-
-const server = fastify()
+const server : FastifyInstance = fastify()
 
 server.register(require('fastify-postgres'), {
   connectionString: 'postgres://postgres:mainmain@localhost:5432/gonduit',
@@ -21,35 +18,8 @@ server.get('/ping', async (request, reply) => {
   return 'pong\n'
 })
 
-server.get<{
-    Querystring: IQuerystring,
-    Headers: IHeaders
-  }>('/auth', async (request, reply) => {
-    const { username, password } = request.query
-    const customerHeader = request.headers['H-Custom']
-    // do something with request data
-  
-    return `logged in!`
-  })
-
-
-server.post<{
-    Body: IRegisterWrapper
-  }>('/users', async (req, reply) => {
-    const registerReq = req.body
-    
-    // do something with request data
-    var output: IUserResponse = {
-        user:{
-            username: registerReq.user.username,
-            email: registerReq.user.email,
-            bio: "this is bio",
-        }
-    }
-    reply
-      .code(200)
-      .send(output)
-  })
+const getClient = () => server.pg.connect()
+new Register(server, getClient)
 
 server.listen(8080, (err, address) => {
   if (err) {
