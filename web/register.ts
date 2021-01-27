@@ -5,9 +5,19 @@ import { v4 as uuidv4 } from 'uuid';
 
 export class Register {
   getClient: () => Promise<PoolClient>;
+  getToken: (username: string, email: string) => string
 
-  constructor(server: FastifyInstance, getClient: () => Promise<PoolClient>) {
-    this.getClient = getClient
+  constructor(
+    server: FastifyInstance, 
+    getClient: () => Promise<PoolClient>,
+    getToken: (username: string, email: string) => string
+  ){
+    this.getClient = getClient  
+    this.getToken = getToken
+
+    /**
+     * endpoint POST <root>/users
+     */
     server.post<{Body: IUserWrapper}>('/users', 
       async (req, reply) => {
         const registerReq = req.body
@@ -24,13 +34,14 @@ export class Register {
       `INSERT INTO users (username, password, email, bio, image, salt) VALUES ` +
       `($1,digest($2||$4,'sha256' ),$3,'','',$4) RETURNING username, email `,
       [req.user.username, req.user.password, req.user.email, salt]);
+
     var output: IUserWrapper = {
       user:{
         username: rows[0].username,
         email:    rows[0].email,
         password: "",
         bio:      null,
-        token:    salt,
+        token:    this.getToken(rows[0].username, rows[0].email),
         image:    null,
       }
     }
