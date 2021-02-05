@@ -17,7 +17,7 @@ new Routes(server)
 /**
  * start listen
  */
-server.listen(8080, (err, address) => {
+server.listen(8080, (err: any, address: any) => {
   if (err) {
     console.error(err)
     process.exit(1)
