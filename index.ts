@@ -1,6 +1,6 @@
 import fastify, { FastifyInstance } from 'fastify'
-import { Plugins } from './impl/plugins'
-import { Routes } from './web/routes'
+import { Plugins }                  from './web/plugins/plugins'
+import { Routes }                   from './web/routes/routes'
 
 /**
  * instantiate fastify server

@@ -7,7 +7,7 @@ export interface IUser {
   bio:      string | null;
   image:    string | null;
 }
-
+  
 export interface IUserWrapper {
   user: IUser;
 }
