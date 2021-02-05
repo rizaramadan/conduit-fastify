@@ -5,18 +5,16 @@ import { IUserRepo } from '../../users/user_repo'
 
 export class UserRepoDb implements IUserRepo {
   //Fields
-  getClient: () => Promise<PoolClient>;
-  
+  getClient: () => Promise<PoolClient>
 
   //Methods
   constructor(
     getClient: () => Promise<PoolClient>,
-    
   ){
-    this.getClient = getClient  
+    this.getClient = getClient
   }
 
-  async create(user: IUser): Promise<boolean> {
+  public async create(user: IUser): Promise<boolean> {
     const client = await this.getClient()
     const salt = uuidv4().toLocaleUpperCase()
     const { rows } = await client.query<IUser>(

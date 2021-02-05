@@ -22,18 +22,18 @@ export class Register {
     server.post<{Body: IUserWrapper}>(url, 
       async (req, reply) => {
         const registerReq = req.body
-        var output = await this.register(registerReq)
+        const output = await this.register(registerReq)
         reply.code(200).send(output)
       }
     )
   }
 
   async register(req: IUserWrapper) : Promise<IUserWrapper> {
-    var success: boolean = await this.userRepo.create(req.user)
+    const success: boolean = await this.userRepo.create(req.user)
     if(!success) {
       throw new Error("cannot create user");
     }
-    var output: IUserWrapper = {
+    const output: IUserWrapper = {
       user:{
         username: req.user.username,
         email:    req.user.email,
