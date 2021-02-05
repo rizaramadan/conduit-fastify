@@ -8,13 +8,18 @@ import { Welcome } from "./welcome"
 
 export class Routes {
   constructor(
-    server: FastifyInstance<Server, 
-    IncomingMessage, 
-    ServerResponse, 
-    FastifyLoggerInstance>
+    server: 
+      FastifyInstance<
+        Server, 
+        IncomingMessage, 
+        ServerResponse, 
+        FastifyLoggerInstance
+      >
   ){
     const getClient = () => server.pg.connect()
-    const getToken = (username: string, email: string) => server.jwt.sign({username:username, email:email})
+    const getToken = 
+      (username: string, email: string) => 
+        server.jwt.sign({username:username, email:email})
     const userRepo = new UserRepoDb(getClient,getToken)
 
     //route setting
