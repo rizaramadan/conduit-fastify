@@ -17,12 +17,12 @@ export class UserRepoDb implements IUserRepo {
   public async create(user: IUser): Promise<boolean> {
     const client = await this.getClient()
     const salt = uuidv4().toLocaleUpperCase()
-    const { rows } = await client.query<IUser>(
+    const result = await client.query<IUser>(
       `INSERT INTO users (username, password, email, bio, image, salt) VALUES ` +
       `($1,digest($2||$4,'sha256' ),$3,'','',$4) RETURNING username `,
       [user.username, user.password, user.email, salt]
     );
     client.release()
-    return rows.length == 1
+    return result?.rows?.length == 1
   }
 }
